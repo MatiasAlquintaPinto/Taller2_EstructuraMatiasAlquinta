@@ -3,7 +3,6 @@
 using namespace std;
 SparseMatrix::SparseMatrix() : start(nullptr) {}
 void SparseMatrix::add(int valor, int xPos, int yPos) {
-    cout << "Agregando nodo: " << valor << " en (" << xPos << ", " << yPos << ")\n";
     if (valor == 0) return;
     Node* nuevoNodo = new Node(valor, xPos, yPos);
     if (!start) {
@@ -66,13 +65,29 @@ void SparseMatrix::printStoredValues() {
 }
 
 int SparseMatrix::density() {
+    if (!start){
+        return 0;
+    }
+    int maxX= 0;
+    int maxY= 0;
     int cont = 0;
     Node* current = start;
     while (current) {
         cont++;
+        if (current->xPosicion > maxX) {
+            maxX = current->xPosicion;
+        }
+        if (current->yPosicion > maxY) {
+            maxY= current->yPosicion;
+        }
         current = current->next;
     }
-    return cont;
+    int totalElementos = (maxX + 1) * (maxY + 1);
+    if (totalElementos == 0) {
+        return 0;
+    }
+    double densidad = static_cast<double>(cont) / totalElementos;
+    return static_cast<int>(densidad * 100);
 }
 SparseMatrix::~SparseMatrix() {
     Node* current = start;
